@@ -1,729 +1,122 @@
-<!DOCTYPE html>
-<html lang="pt">
+<!doctype html>
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diario Alimentar - LogMeal AI</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        input[type="file"] {
-            padding: 5px;
-        }
-        button {
-            background: #3498db;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #2980b9;
-        }
-        button:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-        }
-        .meal-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .meal-item {
-            border: 1px solid #eee;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background: #fafafa;
-        }
-        .meal-item img {
-            max-width: 100px;
-            max-height: 100px;
-            float: left;
-            margin-right: 15px;
-            border-radius: 5px;
-        }
-        .meal-info {
-            overflow: hidden;
-        }
-        .meal-date {
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-        .nutrition-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            margin: 2px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .calories { background: #e74c3c; color: white; }
-        .protein { background: #27ae60; color: white; }
-        .carbs { background: #f39c12; color: white; }
-        .fat { background: #9b59b6; color: white; }
-        .summary-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .stat-box {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .stat-label {
-            color: #7f8c8d;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        .delete-btn {
-            background: #e74c3c;
-            padding: 5px 10px;
-            font-size: 12px;
-            width: auto;
-            float: right;
-        }
-        .delete-btn:hover {
-            background: #c0392b;
-        }
-        .chart-container {
-            margin-top: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .day-bar {
-            display: inline-block;
-            width: 40px;
-            margin: 5px;
-            text-align: center;
-        }
-        .bar {
-            width: 100%;
-            background: #3498db;
-            border-radius: 3px 3px 0 0;
-            min-height: 10px;
-        }
-        .bar-label {
-            font-size: 10px;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-        .export-btn {
-            background: #27ae60;
-            margin-top: 10px;
-        }
-        .export-btn:hover {
-            background: #229954;
-        }
-        .api-config {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .api-config h3 {
-            margin-top: 0;
-            color: #856404;
-        }
-        .api-config code {
-            background: #f8f9fa;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: monospace;
-        }
-        .preview-container {
-            margin-top: 15px;
-            border: 2px dashed #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .preview-container img {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-        }
-        .detected-foods {
-            margin-top: 15px;
-            padding: 15px;
-            background: #e8f6f3;
-            border-radius: 8px;
-            border: 1px solid #1abc9c;
-        }
-        .detected-foods h4 {
-            margin-top: 0;
-            color: #16a085;
-        }
-        .food-item {
-            display: inline-block;
-            background: white;
-            padding: 8px 12px;
-            margin: 5px;
-            border-radius: 5px;
-            border: 1px solid #1abc9c;
-        }
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .ai-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-left: 10px;
-        }
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            .summary-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <title>Diário Alimentar</title>
+  <style>
+    :root{--primary:#0f766e;--bg:#f3f6f5;--text:#15251f;--muted:#64748b;--border:#d8e2df;--danger:#b42318}
+    *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:var(--text)} header{padding:18px 16px;background:linear-gradient(135deg,#115e59,#0f766e);color:#fff;text-align:center;position:sticky;top:0;z-index:3;box-shadow:0 2px 10px #0002}
+    h1{font-size:22px;margin:0}.wrap{max-width:720px;margin:0 auto;padding:16px}.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #1b433210}
+    h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border-radius:12px;color:#fff;text-align:center;background:#0f766e}.stat:nth-child(1){background:#dc2626}.stat:nth-child(2){background:#15803d}.stat:nth-child(3){background:#d97706}.stat:nth-child(4){background:#7e22ce}.stat b{font-size:24px;display:block}.stat span{font-size:12px}
+    label{display:block;font-weight:650;font-size:14px;margin:14px 0 7px}input,textarea{width:100%;font-size:16px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff}textarea{resize:vertical}button{width:100%;border:0;border-radius:10px;padding:13px 14px;margin-top:12px;background:var(--primary);color:#fff;font-weight:700;font-size:16px;cursor:pointer}button.secondary{background:#475569}button.danger{background:var(--danger)}button:disabled{background:#94a3b8;cursor:wait}.note{font-size:13px;color:var(--muted);line-height:1.45}.hidden{display:none}.preview{margin-top:10px;text-align:center}.preview img{max-width:100%;max-height:280px;border-radius:12px;border:1px solid var(--border)}.status{padding:12px;border-radius:10px;background:#ecfdf5;color:#065f46;margin-top:12px;font-size:14px}.error{background:#fef2f2;color:#991b1b}.choices{margin-top:12px}.choice{display:flex;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:9px;margin-top:8px}.choice input{width:auto}.meal{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #e8eeec}.meal:last-child{border:0}.meal img{width:72px;height:72px;object-fit:cover;border-radius:9px}.meal h3{font-size:15px;margin:0 0 4px}.meal p{font-size:13px;color:var(--muted);margin:0 0 6px}.badges{font-size:12px;font-weight:700}.badges span{display:inline-block;border-radius:6px;padding:4px 6px;margin:2px;background:#eef5f3}.small{font-size:12px;color:var(--muted)}
+  </style>
 </head>
 <body>
-    <h1>🍽️ Diário Alimentar <span class="ai-badge">🤖 AI LogMeal</span></h1>
-    
-    <div class="api-config" id="apiConfigBox">
-        <h3>⚙️ Configurar API LogMeal</h3>
-        <p>Para usar o reconhecimento automático de alimentos, precisas de uma <strong>API Key da LogMeal</strong>.</p>
-        <ol>
-            <li>Cria conta em <a href="https://login.logmeal.com/" target="_blank">https://login.logmeal.com/</a></li>
-            <li>Vai ao dashboard e obté´´o teu <code>API Token</code></li>
-            <li>Copia o token e cola abaixo:</li>
-        </ol>
-        <div class="form-group">
-            <input type="text" id="apiToken" placeholder="Cole aqui o teu API Token da LogMeal">
-        </div>
-        <button onclick="saveApiToken()">Guardar Token</button>
-        <button onclick="clearApiToken()" style="background:#e74c3c;margin-top:10px;">Apagar Token</button>
-        <p style="margin-top:15px;font-size:13px;color:#856404;">
-            ℹ️ O token fica guardado apenas no teu browser (localStorage). 
-            Plano free: ~1000 requests/mê´ªs.
-        </p>
+<header><h1>🍽️ Diário Alimentar</h1></header>
+<main class="wrap">
+  <section class="card" id="tokenCard">
+    <h2>Configurar LogMeal</h2>
+    <p class="note">Cola o teu <b>APIUser Token</b> da LogMeal. Não escrevas “Bearer” antes do token.</p>
+    <input id="token" type="password" autocomplete="off" placeholder="APIUser Token">
+    <button onclick="saveToken()">Guardar token</button>
+    <button class="secondary" onclick="removeToken()">Remover token</button>
+    <p class="note">O token fica apenas neste dispositivo. Não o publiques no GitHub.</p>
+  </section>
+
+  <section class="card">
+    <div class="grid">
+      <div class="stat"><b id="kcalToday">0</b><span>kcal hoje</span></div>
+      <div class="stat"><b id="proteinToday">0 g</b><span>proteína</span></div>
+      <div class="stat"><b id="carbsToday">0 g</b><span>hidratos</span></div>
+      <div class="stat"><b id="fatToday">0 g</b><span>gordura</span></div>
     </div>
+  </section>
 
-    <div class="summary-stats">
-        <div class="stat-box">
-            <div class="stat-value" id="totalCalories">0</div>
-            <div class="stat-label">Calorias (Hoje)</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-value" id="totalProtein">0g</div>
-            <div class="stat-label">Proteina (Hoje)</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-value" id="totalCarbs">0g</div>
-            <div class="stat-label">Hidratos (Hoje)</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-value" id="totalFat">0g</div>
-            <div class="stat-label">Gordura (Hoje)</div>
-        </div>
-    </div>
+  <section class="card">
+    <h2>Nova refeição</h2>
+    <label for="mealName">Nome</label><input id="mealName" placeholder="Ex.: Almoço">
+    <label for="photo">Foto da refeição</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+    <div class="preview hidden" id="preview"><img id="previewImage" alt="Pré-visualização"></div>
+    <button id="analyseButton" onclick="analysePhoto()">🔍 Analisar foto</button>
+    <div id="message" class="status hidden"></div>
+    <div id="candidates" class="choices hidden"></div>
+    <button id="confirmButton" class="hidden" onclick="confirmAndNutrition()">Confirmar alimentos e calcular nutrição</button>
 
-    <div class="container">
-        <div class="card">
-            <h2>Adicionar Refeicao</h2>
-            <form id="mealForm">
-                <div class="form-group">
-                    <label for="mealName">Nome da Refeicao:</label>
-                    <input type="text" id="mealName" required placeholder="Ex: Pequeno-almoce, Almoco...">
-                </div>
-                
-                <div class="form-group">
-                    <label for="mealPhoto">📸 Foto da Refeicao (OBRIGATORIA para AI):</label>
-                    <input type="file" id="mealPhoto" accept="image/*" required onchange="previewImage()">
-                    <div class="preview-container" id="previewContainer" style="display:none;">
-                        <img id="imagePreview" src="" alt="Preview">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mealDescription">Descricao / Alimentos:</label>
-                    <textarea id="mealDescription" rows="3" placeholder="Sera preenchido automaticamente pela AI..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="calories">Calorias (kcal):</label>
-                    <input type="number" id="calories" required min="0" placeholder="Preenchido automaticamente pela AI">
-                </div>
-                
-                <div class="form-group">
-                    <label for="protein">Proteina (g):</label>
-                    <input type="number" id="protein" required min="0" step="0.1" placeholder="Preenchido automaticamente pela AI">
-                </div>
-                
-                <div class="form-group">
-                    <label for="carbs">Hidratos de Carbono (g):</label>
-                    <input type="number" id="carbs" required min="0" step="0.1" placeholder="Preenchido automaticamente pela AI">
-                </div>
-                
-                <div class="form-group">
-                    <label for="fat">Gordura (g):</label>
-                    <input type="number" id="fat" required min="0" step="0.1" placeholder="Preenchido automaticamente pela AI">
-                </div>
-                
-                <button type="submit" id="submitBtn">Guardar Refeicao</button>
-                <button type="button" id="analyzeBtn" onclick="analyzeImage()" style="background:#9b59b6;">🔍 Analisar Foto com AI</button>
-            </form>
-            
-            <button class="export-btn" onclick="exportData()">Exportar Dados (CSV)</button>
-            <button class="export-btn" onclick="clearAllData()" style="background:#e74c3c;margin-top:10px;">Apagar Todos os Dados</button>
-        </div>
-        
-        <div class="card">
-            <h2>Refeicoes Registadas</h2>
-            <div class="meal-list" id="mealList">
-                <p style="text-align:center;color:#7f8c8d;">Ainda nao ha refeicoes registadas.</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="chart-container">
-        <h2>Evolucao Semanal (Calorias)</h2>
-        <div id="weeklyChart"></div>
-    </div>
+    <label for="description">Alimentos</label><textarea id="description" rows="2" placeholder="Será preenchido após a análise; podes corrigir."></textarea>
+    <label for="calories">Calorias (kcal)</label><input id="calories" type="number" min="0" step="1" placeholder="Estimativa / edição manual">
+    <label for="protein">Proteína (g)</label><input id="protein" type="number" min="0" step="0.1">
+    <label for="carbs">Hidratos (g)</label><input id="carbs" type="number" min="0" step="0.1">
+    <label for="fat">Gordura (g)</label><input id="fat" type="number" min="0" step="0.1">
+    <button onclick="saveMeal()">💾 Guardar refeição</button>
+  </section>
 
-    <script>
-        // Variaveis globais
-        let meals = JSON.parse(localStorage.getItem('meals')) || [];
-        let apiToken = localStorage.getItem('logmealToken') || '';
-        let currentImageBase64 = null;
-        let analyzedData = null;
-
-        // Configurar API Token
-        function saveApiToken() {
-            const token = document.getElementById('apiToken').value.trim();
-            if (token) {
-                localStorage.setItem('logmealToken', token);
-                apiToken = token;
-                document.getElementById('apiToken').value = '';
-                alert('Token guardado com sucesso! ✅');
-                checkApiStatus();
-            }
-        }
-
-        function clearApiToken() {
-            localStorage.removeItem('logmealToken');
-            apiToken = '';
-            alert('Token apagado! ❌');
-            checkApiStatus();
-        }
-
-        function checkApiStatus() {
-            const configBox = document.getElementById('apiConfigBox');
-            if (apiToken) {
-                configBox.style.background = '#d4edda';
-                configBox.style.borderColor = '#28a745';
-                configBox.innerHTML = '<h3>✅ API LogMeal Configurada</h3><p>O teu token esta guardado e pronto a usar!</p><button onclick="clearApiToken()" style="background:#e74c3c;">Apagar Token</button>';
-            }
-        }
-
-        // Preview da imagem
-        function previewImage() {
-            const fileInput = document.getElementById('mealPhoto');
-            const previewContainer = document.getElementById('previewContainer');
-            const imagePreview = document.getElementById('imagePreview');
-            
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    currentImageBase64 = e.target.result;
-                    imagePreview.src = currentImageBase64;
-                    previewContainer.style.display = 'block';
-                    
-                    // Auto-analisar se tiver token
-                    if (apiToken) {
-                        analyzeImage();
-                    }
-                };
-                
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Analisar imagem com LogMeal API
-        async function analyzeImage() {
-            if (!apiToken) {
-                alert('⚠️ Precisas de configurar o teu API Token da LogMeal primeiro!');
-                return;
-            }
-
-            if (!currentImageBase64) {
-                alert('⚠️ Seleciona uma foto primeiro!');
-                return;
-            }
-
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            analyzeBtn.disabled = true;
-            analyzeBtn.innerHTML = '<div class="spinner"></div>A analisar...';
-            submitBtn.disabled = true;
-
-            try {
-                // Extrair base64 sem o prefixo
-                const base64Data = currentImageBase64.split(',')[1];
-                
-                // Endpoint da LogMeal para analise completa
-                const response = await fetch('https://api.logmeal.com/v2/image/segmentation/complete', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        image: base64Data,
-                        format: 'base64'
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro API: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('LogMeal Response:', data);
-
-                // Processar resultados
-                if (data.dishes && data.dishes.length > 0) {
-                    let totalCalories = 0;
-                    let totalProtein = 0;
-                    let totalCarbs = 0;
-                    let totalFat = 0;
-                    let foodNames = [];
-
-                    data.dishes.forEach(dish => {
-                        if (dish.name) foodNames.push(dish.name);
-                        
-                        // Somar valores nutricionais se existirem
-                        if (dish.nutrition) {
-                            totalCalories += dish.nutrition.energy || 0;
-                            totalProtein += dish.nutrition.protein || 0;
-                            totalCarbs += dish.nutrition.carbohydrates || 0;
-                            totalFat += dish.nutrition.fat || 0;
-                        }
-                    });
-
-                    // Preencher formulario automaticamente
-                    document.getElementById('mealDescription').value = foodNames.join(', ') || 'Alimentos detetados pela AI';
-                    document.getElementById('calories').value = Math.round(totalCalories) || 0;
-                    document.getElementById('protein').value = totalProtein.toFixed(1) || 0;
-                    document.getElementById('carbs').value = totalCarbs.toFixed(1) || 0;
-                    document.getElementById('fat').value = totalFat.toFixed(1) || 0;
-
-                    // Mostrar alimentos detetados
-                    showDetectedFoods(foodNames, totalCalories);
-
-                    analyzedData = {
-                        calories: Math.round(totalCalories),
-                        protein: totalProtein.toFixed(1),
-                        carbs: totalCarbs.toFixed(1),
-                        fat: totalFat.toFixed(1),
-                        foods: foodNames
-                    };
-
-                    alert(`✅ Analise concluida! ${foodNames.length} alimento(s) detetado(s).`);
-                } else {
-                    alert('⚠️ Nao foi possivel detetar alimentos na foto. Tenta outra foto mais clara.');
-                }
-
-            } catch (error) {
-                console.error('Erro na analise:', error);
-                alert(`❌ Erro na analise: ${error.message}\n\nVerifica se o teu token API esta valido.`);
-            } finally {
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '🔍 Analisar Foto com AI';
-                submitBtn.disabled = false;
-            }
-        }
-
-        function showDetectedFoods(foods, calories) {
-            const form = document.getElementById('mealForm');
-            const existing = form.querySelector('.detected-foods');
-            if (existing) existing.remove();
-
-            const detectedDiv = document.createElement('div');
-            detectedDiv.className = 'detected-foods';
-            detectedDiv.innerHTML = `
-                <h4>🍽️ Alimentos Detetados:</h4>
-                <div>${foods.map(f => `<span class="food-item">${f}</span>`).join('')}</div>
-                <p style="margin-top:10px;"><strong>Total estimado:</strong> ${calories} kcal</p>
-            `;
-            form.appendChild(detectedDiv);
-        }
-
-        // Guardar dados
-        function saveMeals() {
-            localStorage.setItem('meals', JSON.stringify(meals));
-            renderMeals();
-            updateSummary();
-            renderChart();
-        }
-        
-        // Renderizar lista de refeicoes
-        function renderMeals() {
-            const mealList = document.getElementById('mealList');
-            
-            if (meals.length === 0) {
-                mealList.innerHTML = '<p style="text-align:center;color:#7f8c8d;">Ainda nao ha refeicoes registadas.</p>';
-                return;
-            }
-            
-            const sortedMeals = [...meals].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
-            mealList.innerHTML = sortedMeals.map((meal, index) => {
-                const date = new Date(meal.timestamp).toLocaleString('pt-PT');
-                const imgTag = meal.photo ? `<img src="${meal.photo}" alt="Foto da refeicao">` : '';
-                
-                return `
-                    <div class="meal-item">
-                        ${imgTag}
-                        <div class="meal-info">
-                            <button class="delete-btn" onclick="deleteMeal(${index})">X</button>
-                            <strong>${meal.name}</strong>
-                            <div class="meal-date">${date}</div>
-                            <p>${meal.description || ''}</p>
-                            <div>
-                                <span class="nutrition-badge calories">${meal.calories} kcal</span>
-                                <span class="nutrition-badge protein">${meal.protein}g prot</span>
-                                <span class="nutrition-badge carbs">${meal.carbs}g hidr</span>
-                                <span class="nutrition-badge fat">${meal.fat}g gord</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // Atualizar resumo diario
-        function updateSummary() {
-            const today = new Date().toDateString();
-            const todayMeals = meals.filter(m => new Date(m.timestamp).toDateString() === today);
-            
-            const totalCalories = todayMeals.reduce((sum, m) => sum + m.calories, 0);
-            const totalProtein = todayMeals.reduce((sum, m) => sum + m.protein, 0);
-            const totalCarbs = todayMeals.reduce((sum, m) => sum + m.carbs, 0);
-            const totalFat = todayMeals.reduce((sum, m) => sum + m.fat, 0);
-            
-            document.getElementById('totalCalories').textContent = totalCalories;
-            document.getElementById('totalProtein').textContent = totalProtein.toFixed(1) + 'g';
-            document.getElementById('totalCarbs').textContent = totalCarbs.toFixed(1) + 'g';
-            document.getElementById('totalFat').textContent = totalFat.toFixed(1) + 'g';
-        }
-        
-        // Renderizar grafico semanal
-        function renderChart() {
-            const chartContainer = document.getElementById('weeklyChart');
-            const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
-            const today = new Date();
-            
-            const dailyTotals = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dateStr = date.toDateString();
-                const dayMeals = meals.filter(m => new Date(m.timestamp).toDateString() === dateStr);
-                const total = dayMeals.reduce((sum, m) => sum + m.calories, 0);
-                dailyTotals.push({
-                    day: days[date.getDay()],
-                    calories: total,
-                    date: date.toLocaleDateString('pt-PT', {day: '2-digit', month: '2-digit'})
-                });
-            }
-            
-            const maxCalories = Math.max(...dailyTotals.map(d => d.calories), 1);
-            
-            chartContainer.innerHTML = dailyTotals.map(d => {
-                const height = (d.calories / maxCalories) * 150;
-                return `
-                    <div class="day-bar">
-                        <div class="bar" style="height:${height}px;" title="${d.calories} kcal"></div>
-                        <div class="bar-label">${d.day}<br>${d.date}</div>
-                        <div style="font-size:10px;font-weight:bold;margin-top:3px;">${d.calories}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // Adicionar refeicao
-        document.getElementById('mealForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const photoInput = document.getElementById('mealPhoto');
-            const file = photoInput.files[0];
-            
-            const processMeal = (photoData) => {
-                const newMeal = {
-                    id: Date.now(),
-                    timestamp: new Date().toISOString(),
-                    name: document.getElementById('mealName').value,
-                    photo: photoData,
-                    description: document.getElementById('mealDescription').value,
-                    calories: parseFloat(document.getElementById('calories').value),
-                    protein: parseFloat(document.getElementById('protein').value),
-                    carbs: parseFloat(document.getElementById('carbs').value),
-                    fat: parseFloat(document.getElementById('fat').value)
-                };
-                
-                meals.push(newMeal);
-                saveMeals();
-                
-                // Limpar formulario
-                this.reset();
-                document.getElementById('previewContainer').style.display = 'none';
-                currentImageBase64 = null;
-                analyzedData = null;
-                
-                // Remover alimentos detetados
-                const detected = this.querySelector('.detected-foods');
-                if (detected) detected.remove();
-            };
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    processMeal(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                processMeal(null);
-            }
-        });
-        
-        // Apagar refeicao
-        function deleteMeal(index) {
-            if (confirm('Tem a certeza que quer apagar esta refeicao?')) {
-                const sortedMeals = [...meals].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                const mealToDelete = sortedMeals[index];
-                meals = meals.filter(m => m.id !== mealToDelete.id);
-                saveMeals();
-            }
-        }
-        
-        // Exportar dados para CSV
-        function exportData() {
-            if (meals.length === 0) {
-                alert('Nao ha dados para exportar!');
-                return;
-            }
-            
-            const headers = ['Data', 'Hora', 'Refeicao', 'Descricao', 'Calorias', 'Proteina (g)', 'Hidratos (g)', 'Gordura (g)'];
-            const rows = meals.map(m => {
-                const date = new Date(m.timestamp);
-                return [
-                    date.toLocaleDateString('pt-PT'),
-                    date.toLocaleTimeString('pt-PT'),
-                    `"${m.name}"`,
-                    `"${m.description || ''}"`,
-                    m.calories,
-                    m.protein,
-                    m.carbs,
-                    m.fat
-                ].join(',');
-            });
-            
-            const csv = [headers.join(','), ...rows].join('\n');
-            const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `diario_alimentar_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
-        }
-        
-        // Apagar todos os dados
-        function clearAllData() {
-            if (confirm('Tem a certeza que quer apagar TODOS os dados? Esta acao nao pode ser desfeita!')) {
-                meals = [];
-                saveMeals();
-            }
-        }
-
-        // Inicializar
-        checkApiStatus();
-        if (apiToken) {
-            document.getElementById('apiToken').value = apiToken;
-        }
-        renderMeals();
-        updateSummary();
-        renderChart();
-    </script>
+  <section class="card"><h2>Histórico</h2><div id="history"></div><button class="danger" onclick="clearMeals()">Apagar todos os registos</button></section>
+</main>
+<script>
+let token=localStorage.getItem('logmeal_api_user_token')||'';
+let imageId=null, segmentation=null, photoData=null;
+let meals=JSON.parse(localStorage.getItem('diario_meals')||'[]');
+const $=id=>document.getElementById(id);
+$('token').value=token;
+$('photo').addEventListener('change',()=>{const f=$('photo').files[0]; if(!f)return; const r=new FileReader();r.onload=e=>{photoData=e.target.result;$('previewImage').src=photoData;$('preview').classList.remove('hidden')};r.readAsDataURL(f)});
+function saveToken(){token=$('token').value.trim().replace(/^Bearer\s+/i,'');localStorage.setItem('logmeal_api_user_token',token);show('Token guardado neste dispositivo.','ok')}
+function removeToken(){localStorage.removeItem('logmeal_api_user_token');token='';$('token').value='';show('Token removido.','ok')}
+function show(text,type='ok'){const el=$('message');el.textContent=text;el.className='status '+(type==='error'?'error':'')}
+function setBusy(b,text='🔍 Analisar foto'){const x=$('analyseButton');x.disabled=b;x.textContent=b?'A enviar e a analisar…':text}
+async function logmeal(path,options={}){const headers={Authorization:'Bearer '+token,...(options.headers||{})};const r=await fetch('https://api.logmeal.com/v2'+path,{...options,headers});const raw=await r.text();let data;try{data=JSON.parse(raw)}catch{data={raw}}if(!r.ok)throw new Error('API '+r.status+': '+(data.message||data.detail||data.error||raw||'pedido inválido'));return data}
+async function analysePhoto(){
+  if(!token){show('Configura primeiro um APIUser Token da LogMeal.','error');return}
+  const file=$('photo').files[0];if(!file){show('Escolhe ou tira uma foto primeiro.','error');return}
+  if(file.size>8*1024*1024){show('A foto é demasiado grande. Usa uma imagem inferior a 8 MB.','error');return}
+  setBusy(true);show('A enviar a foto…');$('candidates').classList.add('hidden');$('confirmButton').classList.add('hidden');
+  try{
+    const fd=new FormData();fd.append('image',file,file.name||'meal.jpg');
+    segmentation=await logmeal('/image/segmentation/complete',{method:'POST',body:fd});
+    imageId=segmentation.imageId||segmentation.image_id||segmentation.id;
+    const items=segmentation.segmentation_results||segmentation.segmentationResults||segmentation.dishes||segmentation.results||[];
+    if(!imageId)throw new Error('A resposta não trouxe imageId. Consulta a resposta no painel LogMeal ou confirma se o teu plano suporta segmentação.');
+    renderCandidates(items);show('Foto analisada. Confirma um alimento por cada zona detetada.');
+  }catch(e){show(e.message,'error')}finally{setBusy(false)}
+}
+function getCandidates(item){return item.recognition_results||item.recognitionResults||item.dishes||item.candidates||item.predictions||[]}
+function label(x){return x.name||x.dish_name||x.dishName||x.label||x.food_name||'Alimento não identificado'}
+function idOf(x){return x.id||x.dish_id||x.dishId||x.food_id||x.foodId||x.name}
+function regionOf(item,i){return item.region_id||item.regionId||item.id||i}
+function renderCandidates(items){
+  const root=$('candidates');root.innerHTML='';
+  if(!Array.isArray(items)||!items.length){root.innerHTML='<p class="note">Não foram encontrados alimentos. Podes preencher os valores manualmente.</p>';root.classList.remove('hidden');return}
+  items.forEach((item,i)=>{const options=getCandidates(item);const group=document.createElement('div');group.innerHTML='<b>Alimento '+(i+1)+'</b>';if(options.length){options.slice(0,5).forEach((o,j)=>{const div=document.createElement('label');div.className='choice';div.innerHTML='<input type="radio" name="region_'+i+'" value="'+String(idOf(o)).replace(/"/g,'&quot;')+'" '+(j===0?'checked':'')+'><span>'+label(o)+'</span>';group.appendChild(div)})}else{group.innerHTML+='<p class="note">Sem sugestões para esta zona.</p>'}group.dataset.region=regionOf(item,i);root.appendChild(group)});root.classList.remove('hidden');$('confirmButton').classList.remove('hidden')
+}
+async function confirmAndNutrition(){
+  if(!imageId){show('Analisa primeiro a fotografia.','error');return}
+  const groups=[...$('candidates').children];const selected=[];groups.forEach(g=>{const r=g.querySelector('input:checked');if(r)selected.push({region_id:g.dataset.region,dish_id:r.value})});
+  if(!selected.length){show('Não há sugestões para confirmar. Preenche manualmente.','error');return}
+  $('confirmButton').disabled=true;$('confirmButton').textContent='A calcular nutrição…';
+  try{
+    // O formato abaixo cobre os nomes usados na documentação recente. Se a tua conta devolver 400,
+    // a mensagem da API é mostrada para podermos ajustar o formato ao teu contrato de API.
+    await logmeal('/image/confirm/dish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageId:imageId,dishes:selected})});
+    const nutrition=await logmeal('/nutrition/recipe/nutritionalInfo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageId:imageId})});
+    fillNutrition(nutrition,selected);show('Nutrição calculada. Confirma os valores e guarda a refeição.');
+  }catch(e){show(e.message+' Podes preencher os valores manualmente; envia-me esta mensagem se quiseres que eu adapte o formato ao resultado da tua conta.','error')}finally{$('confirmButton').disabled=false;$('confirmButton').textContent='Confirmar alimentos e calcular nutrição'}
+}
+function fillNutrition(data,selected){
+  const text=JSON.stringify(data);const nums=(keys)=>{for(const k of keys){const m=text.match(new RegExp('"'+k+'"\\s*:\\s*([0-9.]+)','i'));if(m)return Number(m[1])}return 0};
+  const energy=nums(['energy','calories','kcal','energyKcal']);const p=nums(['protein','proteins']);const c=nums(['carbohydrates','carbs','carbohydrate']);const f=nums(['fat','fats','lipids']);
+  $('calories').value=Math.round(energy);$('protein').value=p.toFixed(1);$('carbs').value=c.toFixed(1);$('fat').value=f.toFixed(1);
+  const names=[...$('candidates').querySelectorAll('input:checked')].map(i=>i.parentElement.textContent.trim());$('description').value=names.join(', ');
+}
+function num(id){return Number($(id).value)||0}
+function saveMeal(){
+  const name=$('mealName').value.trim()||'Refeição';const m={id:Date.now(),date:new Date().toISOString(),name,photo:photoData,description:$('description').value.trim(),calories:num('calories'),protein:num('protein'),carbs:num('carbs'),fat:num('fat')};
+  meals.push(m);localStorage.setItem('diario_meals',JSON.stringify(meals));render();$('mealName').value='';$('photo').value='';$('preview').classList.add('hidden');$('description').value='';['calories','protein','carbs','fat'].forEach(i=>$(i).value='');$('candidates').innerHTML='';$('candidates').classList.add('hidden');$('confirmButton').classList.add('hidden');imageId=null;photoData=null;show('Refeição guardada.');
+}
+function render(){const today=new Date().toDateString();const d=meals.filter(x=>new Date(x.date).toDateString()===today);const sum=k=>d.reduce((a,x)=>a+(Number(x[k])||0),0);$('kcalToday').textContent=Math.round(sum('calories'));$('proteinToday').textContent=sum('protein').toFixed(0)+' g';$('carbsToday').textContent=sum('carbs').toFixed(0)+' g';$('fatToday').textContent=sum('fat').toFixed(0)+' g';const h=$('history');if(!meals.length){h.innerHTML='<p class="note">Ainda não há refeições registadas.</p>';return}h.innerHTML=[...meals].reverse().map(x=>'<div class="meal">'+(x.photo?'<img src="'+x.photo+'" alt="Refeição">':'')+'<div><h3>'+x.name+'</h3><p>'+new Date(x.date).toLocaleString('pt-PT')+(x.description?' · '+x.description:'')+'</p><div class="badges"><span>'+x.calories+' kcal</span><span>'+x.protein+' g P</span><span>'+x.carbs+' g H</span><span>'+x.fat+' g G</span></div></div></div>').join('')}
+function clearMeals(){if(confirm('Apagar todos os registos?')){meals=[];localStorage.removeItem('diario_meals');render()}}
+render();
+</script>
 </body>
 </html>
