@@ -1,121 +1,73 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f766e">
-  <title>Diário Alimentar</title>
-  <style>
-    :root{--primary:#0f766e;--bg:#f3f6f5;--text:#15251f;--muted:#64748b;--border:#d8e2df;--danger:#b42318}
-    *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-    body{margin:0;background:var(--bg);color:var(--text)} header{padding:18px 16px;background:linear-gradient(135deg,#115e59,#0f766e);color:#fff;text-align:center;position:sticky;top:0;z-index:3;box-shadow:0 2px 10px #0002}
-    h1{font-size:22px;margin:0}.wrap{max-width:720px;margin:0 auto;padding:16px}.card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #1b433210}
-    h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border-radius:12px;color:#fff;text-align:center;background:#0f766e}.stat:nth-child(1){background:#dc2626}.stat:nth-child(2){background:#15803d}.stat:nth-child(3){background:#d97706}.stat:nth-child(4){background:#7e22ce}.stat b{font-size:24px;display:block}.stat span{font-size:12px}
-    label{display:block;font-weight:650;font-size:14px;margin:14px 0 7px}input,textarea{width:100%;font-size:16px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff}textarea{resize:vertical}button{width:100%;border:0;border-radius:10px;padding:13px 14px;margin-top:12px;background:var(--primary);color:#fff;font-weight:700;font-size:16px;cursor:pointer}button.secondary{background:#475569}button.danger{background:var(--danger)}button:disabled{background:#94a3b8;cursor:wait}.note{font-size:13px;color:var(--muted);line-height:1.45}.hidden{display:none}.preview{margin-top:10px;text-align:center}.preview img{max-width:100%;max-height:280px;border-radius:12px;border:1px solid var(--border)}.status{padding:12px;border-radius:10px;background:#ecfdf5;color:#065f46;margin-top:12px;font-size:14px}.error{background:#fef2f2;color:#991b1b}.choices{margin-top:12px}.choice{display:flex;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:9px;margin-top:8px}.choice input{width:auto}.meal{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #e8eeec}.meal:last-child{border:0}.meal img{width:72px;height:72px;object-fit:cover;border-radius:9px}.meal h3{font-size:15px;margin:0 0 4px}.meal p{font-size:13px;color:var(--muted);margin:0 0 6px}.badges{font-size:12px;font-weight:700}.badges span{display:inline-block;border-radius:6px;padding:4px 6px;margin:2px;background:#eef5f3}.small{font-size:12px;color:var(--muted)}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Diário Alimentar</title>
+<style>
+:root{--green:#0f766e;--green2:#115e59;--bg:#f2f6f5;--text:#182520;--muted:#64748b;--line:#d5e2dd;--red:#b42318}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}body{margin:0;background:var(--bg);color:var(--text)}header{position:sticky;top:0;z-index:10;padding:18px 16px;background:linear-gradient(135deg,var(--green2),var(--green));color:white;text-align:center;box-shadow:0 2px 10px #0002}h1{font-size:23px;margin:0}.wrap{max-width:720px;margin:auto;padding:16px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:16px;box-shadow:0 2px 9px #123b3010}h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{border-radius:12px;color:#fff;padding:13px;text-align:center;background:#0f766e}.stat:nth-child(1){background:#dc2626}.stat:nth-child(2){background:#15803d}.stat:nth-child(3){background:#d97706}.stat:nth-child(4){background:#7e22ce}.stat b{display:block;font-size:24px}.stat span{font-size:12px}label{display:block;font-weight:700;font-size:14px;margin:14px 0 7px}input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff}textarea{resize:vertical}button{width:100%;margin-top:12px;padding:14px;border:0;border-radius:10px;background:var(--green);color:white;font-size:16px;font-weight:750;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.secondary{background:#475569}.danger{background:var(--red)}.hidden{display:none!important}.note{font-size:13px;line-height:1.45;color:var(--muted)}.preview{margin-top:12px;text-align:center}.preview img{max-width:100%;max-height:300px;border:1px solid var(--line);border-radius:12px}.message{margin-top:12px;padding:12px;border-radius:10px;background:#ecfdf5;color:#065f46;font-size:14px;white-space:pre-wrap}.message.error{background:#fef2f2;color:#991b1b}.choice{display:flex;align-items:center;gap:9px;border:1px solid var(--line);padding:10px;border-radius:9px;margin-top:8px;font-size:14px}.choice input{width:auto}.meal{display:flex;gap:12px;border-bottom:1px solid #e7eeeb;padding:12px 0}.meal:last-child{border:0}.meal img{width:72px;height:72px;border-radius:10px;object-fit:cover}.meal h3{font-size:15px;margin:0 0 4px}.meal p{font-size:13px;color:var(--muted);margin:0 0 5px}.badges span{display:inline-block;background:#edf5f2;padding:4px 6px;border-radius:6px;margin:2px;font-size:12px;font-weight:700}
+</style>
 </head>
 <body>
 <header><h1>🍽️ Diário Alimentar</h1></header>
 <main class="wrap">
-  <section class="card" id="tokenCard">
-    <h2>Configurar LogMeal</h2>
-    <p class="note">Cola o teu <b>APIUser Token</b> da LogMeal. Não escrevas “Bearer” antes do token.</p>
-    <input id="token" type="password" autocomplete="off" placeholder="APIUser Token">
-    <button onclick="saveToken()">Guardar token</button>
-    <button class="secondary" onclick="removeToken()">Remover token</button>
-    <p class="note">O token fica apenas neste dispositivo. Não o publiques no GitHub.</p>
-  </section>
-
-  <section class="card">
-    <div class="grid">
-      <div class="stat"><b id="kcalToday">0</b><span>kcal hoje</span></div>
-      <div class="stat"><b id="proteinToday">0 g</b><span>proteína</span></div>
-      <div class="stat"><b id="carbsToday">0 g</b><span>hidratos</span></div>
-      <div class="stat"><b id="fatToday">0 g</b><span>gordura</span></div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Nova refeição</h2>
-    <label for="mealName">Nome</label><input id="mealName" placeholder="Ex.: Almoço">
-    <label for="photo">Foto da refeição</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
-    <div class="preview hidden" id="preview"><img id="previewImage" alt="Pré-visualização"></div>
-    <button id="analyseButton" onclick="analysePhoto()">🔍 Analisar foto</button>
-    <div id="message" class="status hidden"></div>
-    <div id="candidates" class="choices hidden"></div>
-    <button id="confirmButton" class="hidden" onclick="confirmAndNutrition()">Confirmar alimentos e calcular nutrição</button>
-
-    <label for="description">Alimentos</label><textarea id="description" rows="2" placeholder="Será preenchido após a análise; podes corrigir."></textarea>
-    <label for="calories">Calorias (kcal)</label><input id="calories" type="number" min="0" step="1" placeholder="Estimativa / edição manual">
-    <label for="protein">Proteína (g)</label><input id="protein" type="number" min="0" step="0.1">
-    <label for="carbs">Hidratos (g)</label><input id="carbs" type="number" min="0" step="0.1">
-    <label for="fat">Gordura (g)</label><input id="fat" type="number" min="0" step="0.1">
-    <button onclick="saveMeal()">💾 Guardar refeição</button>
-  </section>
-
-  <section class="card"><h2>Histórico</h2><div id="history"></div><button class="danger" onclick="clearMeals()">Apagar todos os registos</button></section>
+<section class="card">
+<h2>LogMeal API</h2>
+<p class="note">Cola apenas o <b>APIUser Token</b>. Não coloques “Bearer” antes do token.</p>
+<input id="token" type="password" placeholder="APIUser Token" autocomplete="off">
+<button onclick="saveToken()">Guardar token</button>
+<button class="secondary" onclick="removeToken()">Remover token</button>
+<p class="note">O token fica guardado apenas no browser deste iPhone. Não o publiques no GitHub.</p>
+</section>
+<section class="card"><div class="grid"><div class="stat"><b id="kcal">0</b><span>kcal hoje</span></div><div class="stat"><b id="pro">0 g</b><span>proteína</span></div><div class="stat"><b id="carb">0 g</b><span>hidratos</span></div><div class="stat"><b id="fat">0 g</b><span>gordura</span></div></div></section>
+<section class="card">
+<h2>Nova refeição</h2>
+<label for="name">Nome da refeição</label><input id="name" placeholder="Ex.: Almoço">
+<label for="photo">Foto da refeição</label><input id="photo" type="file" accept="image/*" capture="environment">
+<div id="preview" class="preview hidden"><img id="previewImg" alt="Foto da refeição"></div>
+<button id="analyse" onclick="analysePhoto()">🔍 Analisar foto</button>
+<div id="message" class="message hidden"></div>
+<div id="choices" class="hidden"></div>
+<button id="confirm" class="hidden" onclick="confirmDishes()">Confirmar alimentos</button>
+<label for="foods">Alimentos</label><textarea id="foods" rows="2" placeholder="Será preenchido após a análise; podes corrigir."></textarea>
+<label for="calories">Calorias (kcal)</label><input id="calories" type="number" min="0" step="1" placeholder="Preenche ou corrige a estimativa">
+<label for="protein">Proteína (g)</label><input id="protein" type="number" min="0" step="0.1">
+<label for="carbs">Hidratos (g)</label><input id="carbs" type="number" min="0" step="0.1">
+<label for="fats">Gordura (g)</label><input id="fats" type="number" min="0" step="0.1">
+<button onclick="saveMeal()">💾 Guardar refeição</button>
+</section>
+<section class="card"><h2>Histórico</h2><div id="history"></div><button class="danger" onclick="clearMeals()">Apagar todos os registos</button></section>
 </main>
 <script>
-let token=localStorage.getItem('logmeal_api_user_token')||'';
-let imageId=null, segmentation=null, photoData=null;
-let meals=JSON.parse(localStorage.getItem('diario_meals')||'[]');
 const $=id=>document.getElementById(id);
+let token=localStorage.getItem('logmeal_token')||'';
+let compressedPhoto=null,displayPhoto=null,imageId=null,segments=null;
+let meals=JSON.parse(localStorage.getItem('diario_alimentar_meals')||'[]');
 $('token').value=token;
-$('photo').addEventListener('change',()=>{const f=$('photo').files[0]; if(!f)return; const r=new FileReader();r.onload=e=>{photoData=e.target.result;$('previewImage').src=photoData;$('preview').classList.remove('hidden')};r.readAsDataURL(f)});
-function saveToken(){token=$('token').value.trim().replace(/^Bearer\s+/i,'');localStorage.setItem('logmeal_api_user_token',token);show('Token guardado neste dispositivo.','ok')}
-function removeToken(){localStorage.removeItem('logmeal_api_user_token');token='';$('token').value='';show('Token removido.','ok')}
-function show(text,type='ok'){const el=$('message');el.textContent=text;el.className='status '+(type==='error'?'error':'')}
-function setBusy(b,text='🔍 Analisar foto'){const x=$('analyseButton');x.disabled=b;x.textContent=b?'A enviar e a analisar…':text}
-async function logmeal(path,options={}){const headers={Authorization:'Bearer '+token,...(options.headers||{})};const r=await fetch('https://api.logmeal.com/v2'+path,{...options,headers});const raw=await r.text();let data;try{data=JSON.parse(raw)}catch{data={raw}}if(!r.ok)throw new Error('API '+r.status+': '+(data.message||data.detail||data.error||raw||'pedido inválido'));return data}
-async function analysePhoto(){
-  if(!token){show('Configura primeiro um APIUser Token da LogMeal.','error');return}
-  const file=$('photo').files[0];if(!file){show('Escolhe ou tira uma foto primeiro.','error');return}
-  if(file.size>8*1024*1024){show('A foto é demasiado grande. Usa uma imagem inferior a 8 MB.','error');return}
-  setBusy(true);show('A enviar a foto…');$('candidates').classList.add('hidden');$('confirmButton').classList.add('hidden');
-  try{
-    const fd=new FormData();fd.append('image',file,file.name||'meal.jpg');
-    segmentation=await logmeal('/image/segmentation/complete',{method:'POST',body:fd});
-    imageId=segmentation.imageId||segmentation.image_id||segmentation.id;
-    const items=segmentation.segmentation_results||segmentation.segmentationResults||segmentation.dishes||segmentation.results||[];
-    if(!imageId)throw new Error('A resposta não trouxe imageId. Consulta a resposta no painel LogMeal ou confirma se o teu plano suporta segmentação.');
-    renderCandidates(items);show('Foto analisada. Confirma um alimento por cada zona detetada.');
-  }catch(e){show(e.message,'error')}finally{setBusy(false)}
-}
-function getCandidates(item){return item.recognition_results||item.recognitionResults||item.dishes||item.candidates||item.predictions||[]}
-function label(x){return x.name||x.dish_name||x.dishName||x.label||x.food_name||'Alimento não identificado'}
-function idOf(x){return x.id||x.dish_id||x.dishId||x.food_id||x.foodId||x.name}
-function regionOf(item,i){return item.region_id||item.regionId||item.id||i}
-function renderCandidates(items){
-  const root=$('candidates');root.innerHTML='';
-  if(!Array.isArray(items)||!items.length){root.innerHTML='<p class="note">Não foram encontrados alimentos. Podes preencher os valores manualmente.</p>';root.classList.remove('hidden');return}
-  items.forEach((item,i)=>{const options=getCandidates(item);const group=document.createElement('div');group.innerHTML='<b>Alimento '+(i+1)+'</b>';if(options.length){options.slice(0,5).forEach((o,j)=>{const div=document.createElement('label');div.className='choice';div.innerHTML='<input type="radio" name="region_'+i+'" value="'+String(idOf(o)).replace(/"/g,'&quot;')+'" '+(j===0?'checked':'')+'><span>'+label(o)+'</span>';group.appendChild(div)})}else{group.innerHTML+='<p class="note">Sem sugestões para esta zona.</p>'}group.dataset.region=regionOf(item,i);root.appendChild(group)});root.classList.remove('hidden');$('confirmButton').classList.remove('hidden')
-}
-async function confirmAndNutrition(){
-  if(!imageId){show('Analisa primeiro a fotografia.','error');return}
-  const groups=[...$('candidates').children];const selected=[];groups.forEach(g=>{const r=g.querySelector('input:checked');if(r)selected.push({region_id:g.dataset.region,dish_id:r.value})});
-  if(!selected.length){show('Não há sugestões para confirmar. Preenche manualmente.','error');return}
-  $('confirmButton').disabled=true;$('confirmButton').textContent='A calcular nutrição…';
-  try{
-    // O formato abaixo cobre os nomes usados na documentação recente. Se a tua conta devolver 400,
-    // a mensagem da API é mostrada para podermos ajustar o formato ao teu contrato de API.
-    await logmeal('/image/confirm/dish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageId:imageId,dishes:selected})});
-    const nutrition=await logmeal('/nutrition/recipe/nutritionalInfo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageId:imageId})});
-    fillNutrition(nutrition,selected);show('Nutrição calculada. Confirma os valores e guarda a refeição.');
-  }catch(e){show(e.message+' Podes preencher os valores manualmente; envia-me esta mensagem se quiseres que eu adapte o formato ao resultado da tua conta.','error')}finally{$('confirmButton').disabled=false;$('confirmButton').textContent='Confirmar alimentos e calcular nutrição'}
-}
-function fillNutrition(data,selected){
-  const text=JSON.stringify(data);const nums=(keys)=>{for(const k of keys){const m=text.match(new RegExp('"'+k+'"\\s*:\\s*([0-9.]+)','i'));if(m)return Number(m[1])}return 0};
-  const energy=nums(['energy','calories','kcal','energyKcal']);const p=nums(['protein','proteins']);const c=nums(['carbohydrates','carbs','carbohydrate']);const f=nums(['fat','fats','lipids']);
-  $('calories').value=Math.round(energy);$('protein').value=p.toFixed(1);$('carbs').value=c.toFixed(1);$('fat').value=f.toFixed(1);
-  const names=[...$('candidates').querySelectorAll('input:checked')].map(i=>i.parentElement.textContent.trim());$('description').value=names.join(', ');
-}
-function num(id){return Number($(id).value)||0}
-function saveMeal(){
-  const name=$('mealName').value.trim()||'Refeição';const m={id:Date.now(),date:new Date().toISOString(),name,photo:photoData,description:$('description').value.trim(),calories:num('calories'),protein:num('protein'),carbs:num('carbs'),fat:num('fat')};
-  meals.push(m);localStorage.setItem('diario_meals',JSON.stringify(meals));render();$('mealName').value='';$('photo').value='';$('preview').classList.add('hidden');$('description').value='';['calories','protein','carbs','fat'].forEach(i=>$(i).value='');$('candidates').innerHTML='';$('candidates').classList.add('hidden');$('confirmButton').classList.add('hidden');imageId=null;photoData=null;show('Refeição guardada.');
-}
-function render(){const today=new Date().toDateString();const d=meals.filter(x=>new Date(x.date).toDateString()===today);const sum=k=>d.reduce((a,x)=>a+(Number(x[k])||0),0);$('kcalToday').textContent=Math.round(sum('calories'));$('proteinToday').textContent=sum('protein').toFixed(0)+' g';$('carbsToday').textContent=sum('carbs').toFixed(0)+' g';$('fatToday').textContent=sum('fat').toFixed(0)+' g';const h=$('history');if(!meals.length){h.innerHTML='<p class="note">Ainda não há refeições registadas.</p>';return}h.innerHTML=[...meals].reverse().map(x=>'<div class="meal">'+(x.photo?'<img src="'+x.photo+'" alt="Refeição">':'')+'<div><h3>'+x.name+'</h3><p>'+new Date(x.date).toLocaleString('pt-PT')+(x.description?' · '+x.description:'')+'</p><div class="badges"><span>'+x.calories+' kcal</span><span>'+x.protein+' g P</span><span>'+x.carbs+' g H</span><span>'+x.fat+' g G</span></div></div></div>').join('')}
-function clearMeals(){if(confirm('Apagar todos os registos?')){meals=[];localStorage.removeItem('diario_meals');render()}}
+$('photo').addEventListener('change',async()=>{const f=$('photo').files[0];if(!f)return;message('A preparar a foto…');try{displayPhoto=await fileDataUrl(f);compressedPhoto=await compressImage(f);$('previewImg').src=displayPhoto;$('preview').classList.remove('hidden');message('Foto preparada: '+Math.round(compressedPhoto.size/1024)+' KB.');}catch(e){message(e.message,true)}});
+function message(text,error=false){const e=$('message');e.textContent=text;e.className='message '+(error?'error':'')}
+function saveToken(){token=$('token').value.trim().replace(/^Bearer\s+/i,'');if(!token){message('Introduz um token antes de guardar.',true);return}localStorage.setItem('logmeal_token',token);message('Token guardado neste dispositivo.')}
+function removeToken(){token='';$('token').value='';localStorage.removeItem('logmeal_token');message('Token removido.')}
+function fileDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(new Error('Não foi possível ler a imagem.'));r.readAsDataURL(file)})}
+function imageToFile(file,maxSide,quality){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.naturalWidth*scale));c.height=Math.max(1,Math.round(img.naturalHeight*scale));c.getContext('2d',{alpha:false}).drawImage(img,0,0,c.width,c.height);c.toBlob(b=>b?resolve(new File([b],'meal.jpg',{type:'image/jpeg'})):reject(new Error('Erro ao comprimir a foto.')),'image/jpeg',quality)};img.onerror=()=>reject(new Error('Formato de imagem inválido.'));img.src=r.result};r.onerror=()=>reject(new Error('Não foi possível ler a foto.'));r.readAsDataURL(file)})}
+async function compressImage(file){let out=await imageToFile(file,1600,.80);if(out.size>=950000)out=await imageToFile(file,1280,.68);if(out.size>=950000)out=await imageToFile(file,1024,.55);if(out.size>=1048576)throw new Error('A foto continua demasiado grande após compressão. Tenta tirar outra foto com menos detalhe.');return out}
+function busy(on){$('analyse').disabled=on;$('analyse').textContent=on?'A analisar…':'🔍 Analisar foto'}
+async function api(path,opts={}){const res=await fetch('https://api.logmeal.com/v2'+path,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});const text=await res.text();let data;try{data=JSON.parse(text)}catch{data={message:text}}if(!res.ok)throw new Error('API '+res.status+': '+(data.message||data.detail||data.error||text));return data}
+async function analysePhoto(){if(!token){message('Configura primeiro o APIUser Token.',true);return}if(!compressedPhoto){message('Escolhe uma foto e aguarda que seja preparada.',true);return}busy(true);$('choices').classList.add('hidden');$('confirm').classList.add('hidden');try{const fd=new FormData();fd.append('image',compressedPhoto,'meal.jpg');const data=await api('/image/segmentation/complete',{method:'POST',body:fd});imageId=data.imageId||data.image_id||data.id;segments=data.segmentation_results||data.segmentationResults||data.dishes||data.results||[];if(!imageId)throw new Error('A LogMeal não devolveu o identificador da imagem.');renderChoices(segments);message('Análise concluída. Seleciona os alimentos detetados e confirma.')}catch(e){message(e.message,true)}finally{busy(false)}}
+function candidates(s){return s.recognition_results||s.recognitionResults||s.dishes||s.candidates||s.predictions||[]}
+function dishName(x){return x.name||x.dish_name||x.dishName||x.label||'Alimento detetado'}
+function dishId(x){return x.id||x.dish_id||x.dishId||x.name}
+function segmentId(s,i){return s.region_id||s.regionId||s.id||i}
+function renderChoices(items){const root=$('choices');root.innerHTML='';if(!Array.isArray(items)||!items.length){root.innerHTML='<p class="note">Não foram identificados alimentos. Podes preencher os valores manualmente.</p>';root.classList.remove('hidden');return}items.forEach((s,i)=>{const block=document.createElement('div');block.dataset.region=segmentId(s,i);block.innerHTML='<label>Alimento '+(i+1)+'</label>';const list=candidates(s);list.slice(0,5).forEach((d,j)=>{const lab=document.createElement('label');lab.className='choice';lab.innerHTML='<input type="radio" name="region'+i+'" value="'+String(dishId(d)).replace(/"/g,'&quot;')+'" '+(j===0?'checked':'')+'><span>'+dishName(d)+'</span>';block.appendChild(lab)});if(!list.length)block.innerHTML+='<p class="note">Sem sugestões para esta zona.</p>';root.appendChild(block)});root.classList.remove('hidden');$('confirm').classList.remove('hidden')}
+async function confirmDishes(){const selected=[...$('choices').children].map(b=>{const r=b.querySelector('input:checked');return r?{region_id:b.dataset.region,dish_id:r.value}:null}).filter(Boolean);$('foods').value=[...$('choices').querySelectorAll('input:checked')].map(x=>x.parentElement.textContent.trim()).join(', ');message(selected.length?'Alimentos confirmados. Agora preenche ou confirma os valores nutricionais e guarda a refeição.':'Podes preencher os dados manualmente.');}
+function number(id){return Number($(id).value)||0}
+function saveMeal(){const m={id:Date.now(),date:new Date().toISOString(),name:$('name').value.trim()||'Refeição',photo:displayPhoto,foods:$('foods').value.trim(),calories:number('calories'),protein:number('protein'),carbs:number('carbs'),fat:number('fats')};meals.push(m);localStorage.setItem('diario_alimentar_meals',JSON.stringify(meals));$('name').value='';$('photo').value='';$('preview').classList.add('hidden');$('foods').value='';['calories','protein','carbs','fats'].forEach(x=>$(x).value='');compressedPhoto=null;displayPhoto=null;imageId=null;$('choices').innerHTML='';$('choices').classList.add('hidden');$('confirm').classList.add('hidden');message('Refeição guardada.');render()}
+function render(){const today=new Date().toDateString(),d=meals.filter(m=>new Date(m.date).toDateString()===today),sum=k=>d.reduce((a,m)=>a+(Number(m[k])||0),0);$('kcal').textContent=Math.round(sum('calories'));$('pro').textContent=sum('protein').toFixed(0)+' g';$('carb').textContent=sum('carbs').toFixed(0)+' g';$('fat').textContent=sum('fat').toFixed(0)+' g';$('history').innerHTML=meals.length?[...meals].reverse().map(m=>'<div class="meal">'+(m.photo?'<img src="'+m.photo+'" alt="Foto">':'')+'<div><h3>'+m.name+'</h3><p>'+new Date(m.date).toLocaleString('pt-PT')+(m.foods?' · '+m.foods:'')+'</p><div class="badges"><span>'+m.calories+' kcal</span><span>'+m.protein+' g P</span><span>'+m.carbs+' g H</span><span>'+m.fat+' g G</span></div></div></div>').join(''):'<p class="note">Ainda não há refeições registadas.</p>'}
+function clearMeals(){if(confirm('Apagar todos os registos?')){meals=[];localStorage.removeItem('diario_alimentar_meals');render()}}
 render();
 </script>
 </body>
